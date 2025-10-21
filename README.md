@@ -98,3 +98,10 @@ O trabalho deve ser todo desenvolvido em uma pasta com o nome do produto para qu
 | Proposta de implementação                                              | 25%  |
 | Artigos acadêmicos                                                     | 30%  |
 | Produtos relacionados                                                  | 10%  |
+
+
+## Links dos Trabalhos de Semestres anteriores:
+
+https://gitlab.com/fse_fga/trabalhos-semestres-anteriores/trabalhos-2025-1/trabalho-1-2025-1  
+
+https://gitlab.com/fse_fga/trabalhos-semestres-anteriores/trabalhos-2024_2/trabalho-1-2024-2  
