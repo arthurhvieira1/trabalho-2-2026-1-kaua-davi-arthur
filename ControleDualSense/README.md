@@ -217,17 +217,25 @@ flowchart TB
 
 ### 4.1 Artigos sobre as tecnologias que viabilizam o produto
 
-1. *(a preencher)*
-2. *(a preencher)*
-3. *(a preencher)*
-4. *(a preencher)*
+1. "Online Power Management for Latency-Sensitive Bluetooth Low-Energy Beacons" — IEEE Internet of Things Journal. https://ieeexplore.ieee.org/document/8818280/
+Resumo: propõe um mecanismo de gerenciamento de energia para BLE que equilibra intervalo de conexão com restrições de latência — relevante para o relatório HID do DualSense, que precisa ser entregue em poucos milissegundos via Bluetooth sem esgotar a bateria.
+2. "Dynamic modeling and control of voice-coil actuators for high-fidelity display of haptic vibrations" — IEEE Haptics Symposium. https://ieeexplore.ieee.org/document/6775442/
+Resumo: analisa a dinâmica elétrica/mecânica de atuadores de bobina de voz (mesmo princípio dos atuadores HD do DualSense), explicando como a háptica de banda larga é gerada.
+3. "Virtual Keyboard Based on MEMS Sensor Network and Fusion of Accelerometer and Gyroscope" — IEEE Conference Publication. https://ieeexplore.ieee.org/document/8688194/
+Resumo: descreve a fusão de dados de acelerômetro e giroscópio MEMS (IMU 6 eixos) para reconhecimento de movimento, mesma base tecnológica da IMU do DualSense.
+4. ""A touch controller using differential sensing method for on-cell capacitive touch screen panel systems" — IEEE Transactions on Consumer Electronics. https://ieeexplore.ieee.org/abstract/document/6018851/
+Resumo: apresenta um circuito de sensoriamento capacitivo diferencial de alta resposta e baixo consumo, princípio equivalente ao touchpad do DualSense.
 
 ### 4.2 Artigos sobre aplicação / uso do produto
 
-1. *(a preencher)*
-2. *(a preencher)*
-3. *(a preencher)*
-4. *(a preencher)*
+1. "What role does touch play in active entertainment? A narrative review of tactile feedback in gaming" — revisão científica (PMC). https://pmc.ncbi.nlm.nih.gov/articles/PMC12099099/
+Resumo: cita explicitamente o DualSense, mostrando como gatilhos adaptáveis e háptica HD aumentam a imersão tátil em jogos.
+2. "Improving Challenge/Skill Ratio in a Multimodal Interface by Simultaneously Adapting Game Difficulty and Haptic Assistance through Psychophysiological and Performance Feedback" — journal científico (PMC). https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5410602/
+Resumo: modula dificuldade do jogo e assistência háptica com base em sinais fisiológicos, aplicação direta do conceito de feedback tátil adaptativo.
+3. "Towards an intuitive industrial teaching interface for collaborative robots: gamepad teleoperation vs. kinesthetic teaching" — The International Journal of Advanced Manufacturing Technology (Springer). https://link.springer.com/article/10.1007/s00170-025-15657-x
+Resumo: usa um controle PlayStation para teleoperar um braço robótico industrial — exatamente o uso fora de jogos citado na Seção 1.3.
+4. "Wearable Haptics and Immersive Virtual Reality Rehabilitation Training in Children With Neuromotor Impairments" — IEEE Transactions on Neural Systems and Rehabilitation Engineering. https://ieeexplore.ieee.org/document/8384290/
+Resumo: usa feedback háptico vestível em jogos sérios de VR para reabilitação motora infantil — aplicação de tecnologias hápticas em acessibilidade/saúde.
 
 ---
 
@@ -258,7 +266,21 @@ Produtos da mesma categoria (gamepads), de diferentes fabricantes e gerações, 
 
 ### 6.1 Artigos científicos (journals)
 
-*(a preencher — ver Seção 4)*
+[T1] Online Power Management for Latency-Sensitive Bluetooth Low-Energy Beacons. IEEE Internet of Things Journal. https://ieeexplore.ieee.org/document/8818280/
+
+[T2] Dynamic modeling and control of voice-coil actuators for high-fidelity display of haptic vibrations. IEEE Haptics Symposium. https://ieeexplore.ieee.org/document/6775442/
+
+[T3] Virtual Keyboard Based on MEMS Sensor Network and Fusion of Accelerometer and Gyroscope. IEEE Conference Publication. https://ieeexplore.ieee.org/document/8688194/
+
+[T4] A touch controller using differential sensing method for on-cell capacitive touch screen panel systems. IEEE Transactions on Consumer Electronics. https://ieeexplore.ieee.org/abstract/document/6018851/
+
+[A1] What role does touch play in active entertainment? A narrative review of tactile feedback in gaming. PMC. https://pmc.ncbi.nlm.nih.gov/articles/PMC12099099/
+
+[A2] Improving Challenge/Skill Ratio in a Multimodal Interface by Simultaneously Adapting Game Difficulty and Haptic Assistance through Psychophysiological and Performance Feedback. PMC. https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5410602/
+
+[A3] Towards an intuitive industrial teaching interface for collaborative robots: gamepad teleoperation vs. kinesthetic teaching. The International Journal of Advanced Manufacturing Technology. https://link.springer.com/article/10.1007/s00170-025-15657-x
+
+[A4] Wearable Haptics and Immersive Virtual Reality Rehabilitation Training in Children With Neuromotor Impairments. IEEE Transactions on Neural Systems and Rehabilitation Engineering. https://ieeexplore.ieee.org/document/8384290/
 
 ### 6.2 Referências de produtos (comparativo)
 
