@@ -117,7 +117,6 @@ As imagens abaixo, obtidas da desmontagem do controle, ilustram fisicamente os p
   </tr>
 </table>
 
-> *Fonte das Figuras 2 a 4: desmontagem do PS5 DualSense. Salve cada imagem em `img/` com os nomes indicados.*
 
 ### 2.2 Tecnologias críticas
 
@@ -132,24 +131,31 @@ As imagens abaixo, obtidas da desmontagem do controle, ilustram fisicamente os p
 
 ## 3. Proposta de reprodução com ESP32
 
-### 3.1 Ideia geral
+### 3.1 Ideia geral e escopo
 
-As principais funções do DualSense podem ser reproduzidas com uma **ESP32**, que já integra **Bluetooth (BLE)** nativo e pode atuar como um **gamepad Bluetooth HID** real (perfil HID over GATT). Usando os componentes simples da lista da disciplina — joystick de 2 eixos, botões, IMU, sensor de toque, LED RGB, buzzer/motor — recriamos a captura de comandos e parte do feedback tátil, com o **ESP-IDF**.
+Reproduzir o DualSense integralmente não é viável com componentes simples — recursos como a háptica de alta definição (bobina de voz), os gatilhos adaptáveis e o touchpad multitoque dependem de hardware proprietário e sofisticado. Por isso, **este trabalho propõe uma reprodução *parcial*, focada nas principais funcionalidades** do controle: a captura de comandos (direção, botões, gatilhos analógicos e movimento) e a comunicação sem fio, que constituem a essência de um gamepad. As funções não reproduzíveis são tratadas como limitações (Seção 3.5).
+
+A base da proposta é a **ESP32**, que já integra **Bluetooth (BLE)** nativo e pode atuar como um **gamepad Bluetooth HID** real (perfil HID over GATT). Usando os componentes simples da lista da disciplina — joystick de 2 eixos, botões, potenciômetros, IMU, LED RGB e buzzer —, recriamos a captura de comandos e um feedback básico ao usuário, com o **ESP-IDF**.
+
+> **Escopo mínimo (MVP):** o núcleo essencial e mais simples de montar é **joystick (2 eixos + botão) + alguns botões + BLE HID** — já um gamepad funcional reconhecido pelo host. A partir dele, o sistema cresce de forma incremental (LED/buzzer → IMU).
 
 ### 3.2 Mapeamento de funcionalidades → componentes (ecossistema ESP32)
 
 | Funcionalidade do DualSense | Componente na reprodução (lista da disciplina) | Periférico/recurso da ESP32 |
 | --------------------------- | ----------------------------------------------- | --------------------------- |
-| Joysticks analógicos (direção) | **Joystick com 2 Eixos e 1 Botão** (potenciômetros) | ADC (`esp_adc`) + GPIO |
+| Joysticks analógicos (direção) | **Joystick com 2 Eixos e 1 Botão** (potenciômetros) | ADC1 (`esp_adc`) + GPIO |
 | Botões de ação / D-pad | **Botão**, **Encoder Rotativo + Botão** | GPIO |
-| Gatilhos analógicos | **Potenciômetro (Analógico)** | ADC |
+| Gatilhos analógicos | **Potenciômetro (Analógico)** | ADC1 |
 | Detecção de movimento | **Unidade de Medição Inercial (Acelerômetro e Giroscópio)** | I²C |
-| Superfície de toque | **Sensor de Toque** (capacitivo) | GPIO capacitivo (`touch_pad`) |
 | Light bar / identificação | **Led RGB 5mm / SMD** | LEDC (PWM) |
-| Feedback de vibração (háptica) | **Buzzer (passivo)** + **motor via Driver L298N** | LEDC/PWM + GPIO |
-| Comunicação sem fio | (host PC/console) | **Bluetooth BLE HID** (`esp_hidd`) |
+| Feedback ao usuário | **Buzzer (Passivo)** — feedback sonoro | LEDC/PWM |
+| Comunicação sem fio | ESP32 (rádio integrado) | **Bluetooth BLE HID** (`esp_hidd`) |
 | Operação com fio / recarga | — | USB / bateria |
 | Economia de energia | — | **Light/Deep sleep** |
+
+> **Observações de viabilidade na ESP32:**
+> - **ADC2 × BLE:** com o rádio BLE ativo, os pinos do **ADC2 ficam indisponíveis** — todas as entradas analógicas (joysticks + gatilhos, até ~6 canais) devem usar o **ADC1** (GPIO 32–39, 8 canais). Cabe, mas exige planejar os pinos.
+> - **Feedback tátil:** não há motor de vibração na lista; o feedback ao usuário fica restrito ao **Buzzer** (sonoro) e ao **LED RGB** (visual).
 
 ### 3.3 Diagrama conceitual (blocos)
 
@@ -161,7 +167,6 @@ flowchart TB
         B["Botões /<br/>Encoder"]
         G["Potenciômetro<br/>(gatilho)"]
         M["IMU MPU6050<br/>(acel.+giro)"]
-        T["Sensor de toque"]
     end
 
     subgraph ESP["ESP32 (ESP-IDF)"]
@@ -171,11 +176,10 @@ flowchart TB
         LE --> BLE
     end
 
-    subgraph OUT["Saídas (atuadores)"]
+    subgraph OUT["Saídas (feedback)"]
         direction LR
         LED["LED RGB<br/>(PWM/LEDC)"]
         BZ["Buzzer<br/>(PWM)"]
-        MO["Motor de vibração<br/>(driver L298N)"]
     end
 
     HOST(["PC / Console"])
@@ -184,7 +188,6 @@ flowchart TB
     B --> LE
     G --> LE
     M --> LE
-    T --> LE
     BLE <==> HOST
     HOST -. comandos de feedback .-> LE
     LE ==> OUT
@@ -192,20 +195,21 @@ flowchart TB
 
 ### 3.4 Lógica de funcionamento proposta
 
-1. A ESP32 amostra, em alta frequência (ex.: 100–250 Hz), os **eixos analógicos** (ADC), os **botões** (GPIO), a **IMU** (I²C) e o **sensor de toque**.
+1. A ESP32 amostra, em alta frequência (ex.: 100–250 Hz), os **eixos analógicos** (ADC), os **botões** (GPIO) e a **IMU** (I²C).
 2. Aplica **filtragem/zona morta** (*deadzone*) nos eixos e **debounce** nos botões.
 3. Monta o **HID report** (eixos + estados de botão) e o envia ao host via **BLE HID**.
-4. Recebe comandos de **feedback** do host e aciona **LED RGB**, **buzzer** e **motor de vibração**.
+4. Recebe comandos de **feedback** do host e sinaliza com **LED RGB** e **buzzer**.
 5. Entra em **modo de baixo consumo** após inatividade para preservar a bateria.
 
 ### 3.5 Limitações e desafios esperados
 
-- **Háptica de alta definição não é reproduzível fielmente:** os atuadores de bobina de voz e os gatilhos adaptáveis do DualSense são muito mais sofisticados; com buzzer/motor obtemos apenas vibração simples.
-- **Gatilhos adaptáveis (resistência variável):** difíceis de reproduzir sem mecânica/motor dedicado — provavelmente ficam fora do escopo ou são simplificados.
-- **Latência e taxa de atualização:** manter taxa de relatório alta e estável por BLE exige ajuste fino dos intervalos de conexão.
+- **Háptica não é reproduzível com o kit:** os atuadores de bobina de voz do DualSense são muito sofisticados e não há motor de vibração na lista; o feedback fica restrito ao **buzzer (sonoro)** e ao **LED RGB (visual)**.
+- **Gatilhos adaptáveis (resistência variável):** difíceis de reproduzir sem mecânica/motor dedicado — ficam fora do escopo; os gatilhos seriam apenas analógicos (potenciômetro).
+- **Touchpad:** fica fora do escopo — a superfície multitoque do DualSense não é reproduzível com os componentes da lista.
+- **Restrição ADC2 × BLE:** com o BLE ligado, as entradas analógicas precisam ficar todas no **ADC1** (GPIO 32–39); é necessário planejar o orçamento de pinos.
 - **Calibração da IMU e dos joysticks:** necessário calibrar offset/zona morta para evitar *drift*.
-- **Consumo de energia:** conciliar BLE ativo com autonomia de bateria.
-- **Ergonomia/montagem:** integrar todos os componentes num formato segurável é um desafio mecânico (protótipo provavelmente em protoboard/case impresso).
+- **Latência e taxa de atualização:** manter taxa de relatório alta e estável por BLE exige ajuste fino dos intervalos de conexão.
+- **Ergonomia/montagem:** integrar tudo num formato segurável é um desafio mecânico (protótipo provavelmente em protoboard/case impresso).
 
 ---
 
