@@ -151,11 +151,6 @@ A base da proposta é a **ESP32**, que já integra **Bluetooth (BLE)** nativo e 
 | Feedback ao usuário | **Buzzer (Passivo)** — feedback sonoro | 
 | Comunicação sem fio | ESP32 (Bluetooth integrado) | 
 
-
-> **Observações de viabilidade na ESP32:**
-> - **ADC2 × BLE:** com o rádio BLE ativo, os pinos do **ADC2 ficam indisponíveis** — todas as entradas analógicas (joysticks + gatilhos, até ~6 canais) devem usar o **ADC1** (GPIO 32–39, 8 canais). Cabe, mas exige planejar os pinos.
-> - **Feedback tátil:** não há motor de vibração na lista; o feedback ao usuário fica restrito ao **Buzzer** (sonoro) e ao **LED RGB** (visual).
-
 ### 3.3 Diagrama conceitual (blocos)
 
 ```mermaid
@@ -292,5 +287,3 @@ Produtos da mesma categoria (gamepads), de diferentes fabricantes e gerações, 
 - HID over GATT Profile (HOGP) — Texas Instruments. https://www.ti.com/lit/pdf/swra715
 
 ---
-
-> **Status do documento:** em desenvolvimento. Itens a finalizar antes da entrega: (1) preencher os 8 artigos científicos da Seção 4 (pesquisa nas bases acadêmicas: CAPES, Scopus, IEEE Xplore); (2) confirmar as imagens das Figuras 2 a 4.
