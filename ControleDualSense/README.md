@@ -135,7 +135,7 @@ As imagens abaixo, obtidas da desmontagem do controle, ilustram fisicamente os p
 
 Reproduzir o DualSense integralmente não é viável com componentes simples — recursos como a háptica de alta definição (bobina de voz), os gatilhos adaptáveis e o touchpad multitoque dependem de hardware proprietário e sofisticado. Por isso, **este trabalho propõe uma reprodução *parcial*, focada nas principais funcionalidades** do controle: a captura de comandos (direção, botões, gatilhos analógicos e movimento) e a comunicação sem fio, que constituem a essência de um gamepad. As funções não reproduzíveis são tratadas como limitações (Seção 3.5).
 
-A base da proposta é a **ESP32**, que já integra **Bluetooth (BLE)** nativo e pode atuar como um **gamepad Bluetooth HID** real (perfil HID over GATT). Usando os componentes simples da lista da disciplina — joystick de 2 eixos, botões, potenciômetros, IMU, LED RGB e buzzer —, recriamos a captura de comandos e um feedback básico ao usuário, com o **ESP-IDF**.
+A base da proposta é a **ESP32**, que já integra **Bluetooth (BLE)** nativo e pode atuar como um **gamepad Bluetooth HID**. Usando os componentes simples da lista da disciplina — joystick de 2 eixos, botões, potenciômetros, IMU, LED RGB e buzzer —, recriamos a captura de comandos e um feedback básico ao usuário, com o **ESP-IDF**.
 
 > **Escopo mínimo (MVP):** o núcleo essencial e mais simples de montar é **joystick (2 eixos + botão) + alguns botões + BLE HID** — já um gamepad funcional reconhecido pelo host. A partir dele, o sistema cresce de forma incremental (LED/buzzer → IMU).
 
@@ -192,7 +192,6 @@ flowchart TB
 - **Háptica não é reproduzível com o kit:** os atuadores de bobina de voz do DualSense são muito sofisticados e não há motor de vibração na lista; o feedback fica restrito ao **buzzer (sonoro)** e ao **LED RGB (visual)**.
 - **Gatilhos adaptáveis (resistência variável):** difíceis de reproduzir sem mecânica/motor dedicado — ficam fora do escopo; os gatilhos seriam apenas analógicos (potenciômetro).
 - **Touchpad:** fica fora do escopo — a superfície multitoque do DualSense não é reproduzível com os componentes da lista.
-- **Restrição ADC2 × BLE:** com o BLE ligado, as entradas analógicas precisam ficar todas no **ADC1** (GPIO 32–39); é necessário planejar o orçamento de pinos.
 - **Calibração da IMU e dos joysticks:** necessário calibrar offset/zona morta para evitar *drift*.
 - **Latência e taxa de atualização:** manter taxa de relatório alta e estável por BLE exige ajuste fino dos intervalos de conexão.
 - **Ergonomia/montagem:** integrar tudo num formato segurável é um desafio mecânico (protótipo provavelmente em protoboard/case impresso).
