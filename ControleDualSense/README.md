@@ -141,17 +141,16 @@ A base da proposta é a **ESP32**, que já integra **Bluetooth (BLE)** nativo e 
 
 ### 3.2 Mapeamento de funcionalidades → componentes (ecossistema ESP32)
 
-| Funcionalidade do DualSense | Componente na reprodução (lista da disciplina) | Periférico/recurso da ESP32 |
-| --------------------------- | ----------------------------------------------- | --------------------------- |
-| Joysticks analógicos (direção) | **Joystick com 2 Eixos e 1 Botão** (potenciômetros) | ADC1 (`esp_adc`) + GPIO |
-| Botões de ação / D-pad | **Botão**, **Encoder Rotativo + Botão** | GPIO |
-| Gatilhos analógicos | **Potenciômetro (Analógico)** | ADC1 |
-| Detecção de movimento | **Unidade de Medição Inercial (Acelerômetro e Giroscópio)** | I²C |
-| Light bar / identificação | **Led RGB 5mm / SMD** | LEDC (PWM) |
-| Feedback ao usuário | **Buzzer (Passivo)** — feedback sonoro | LEDC/PWM |
-| Comunicação sem fio | ESP32 (rádio integrado) | **Bluetooth BLE HID** (`esp_hidd`) |
-| Operação com fio / recarga | — | USB / bateria |
-| Economia de energia | — | **Light/Deep sleep** |
+| Funcionalidade do DualSense | Componente na reprodução (lista da disciplina) | 
+| --------------------------- | ----------------------------------------------- | 
+| Joysticks analógicos (direção) | **Joystick com 2 Eixos e 1 Botão** (potenciômetros) |
+| Botões de ação / D-pad | **Botão**, **Encoder Rotativo + Botão** | 
+| Gatilhos analógicos | **Potenciômetro (Analógico)** | 
+| Detecção de movimento | **Unidade de Medição Inercial (Acelerômetro e Giroscópio)** | 
+| Light bar / identificação | **Led RGB 5mm / SMD** | 
+| Feedback ao usuário | **Buzzer (Passivo)** — feedback sonoro | 
+| Comunicação sem fio | ESP32 (Bluetooth integrado) | 
+
 
 > **Observações de viabilidade na ESP32:**
 > - **ADC2 × BLE:** com o rádio BLE ativo, os pinos do **ADC2 ficam indisponíveis** — todas as entradas analógicas (joysticks + gatilhos, até ~6 canais) devem usar o **ADC1** (GPIO 32–39, 8 canais). Cabe, mas exige planejar os pinos.
@@ -193,15 +192,7 @@ flowchart TB
     LE ==> OUT
 ```
 
-### 3.4 Lógica de funcionamento proposta
-
-1. A ESP32 amostra, em alta frequência (ex.: 100–250 Hz), os **eixos analógicos** (ADC), os **botões** (GPIO) e a **IMU** (I²C).
-2. Aplica **filtragem/zona morta** (*deadzone*) nos eixos e **debounce** nos botões.
-3. Monta o **HID report** (eixos + estados de botão) e o envia ao host via **BLE HID**.
-4. Recebe comandos de **feedback** do host e sinaliza com **LED RGB** e **buzzer**.
-5. Entra em **modo de baixo consumo** após inatividade para preservar a bateria.
-
-### 3.5 Limitações e desafios esperados
+### 3.4 Limitações e desafios esperados
 
 - **Háptica não é reproduzível com o kit:** os atuadores de bobina de voz do DualSense são muito sofisticados e não há motor de vibração na lista; o feedback fica restrito ao **buzzer (sonoro)** e ao **LED RGB (visual)**.
 - **Gatilhos adaptáveis (resistência variável):** difíceis de reproduzir sem mecânica/motor dedicado — ficam fora do escopo; os gatilhos seriam apenas analógicos (potenciômetro).
