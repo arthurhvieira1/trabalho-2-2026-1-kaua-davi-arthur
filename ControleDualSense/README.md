@@ -146,8 +146,6 @@ A base da proposta é a **ESP32**, que já integra **Bluetooth (BLE)** nativo e 
 | Joysticks analógicos (direção) | **Joystick com 2 Eixos e 1 Botão** (potenciômetros) |
 | Botões de ação / D-pad | **Botão**, **Encoder Rotativo + Botão** | 
 | Gatilhos analógicos | **Potenciômetro (Analógico)** | 
-| Detecção de movimento | **Unidade de Medição Inercial (Acelerômetro e Giroscópio)** | 
-| Light bar / identificação | **Led RGB 5mm / SMD** | 
 | Feedback ao usuário | **Buzzer (Passivo)** — feedback sonoro | 
 | Comunicação sem fio | ESP32 (Bluetooth integrado) | 
 
@@ -192,8 +190,6 @@ flowchart TB
 - **Háptica não é reproduzível com o kit:** os atuadores de bobina de voz do DualSense são muito sofisticados e não há motor de vibração na lista; o feedback fica restrito ao **buzzer (sonoro)** e ao **LED RGB (visual)**.
 - **Gatilhos adaptáveis (resistência variável):** difíceis de reproduzir sem mecânica/motor dedicado — ficam fora do escopo; os gatilhos seriam apenas analógicos (potenciômetro).
 - **Touchpad:** fica fora do escopo — a superfície multitoque do DualSense não é reproduzível com os componentes da lista.
-- **Calibração da IMU e dos joysticks:** necessário calibrar offset/zona morta para evitar *drift*.
-- **Latência e taxa de atualização:** manter taxa de relatório alta e estável por BLE exige ajuste fino dos intervalos de conexão.
 - **Ergonomia/montagem:** integrar tudo num formato segurável é um desafio mecânico (protótipo provavelmente em protoboard/case impresso).
 
 ---
